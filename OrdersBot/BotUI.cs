@@ -5,13 +5,15 @@ using System.Linq;
 using System.Threading;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace TelegramBot
+namespace OrdersBot
 {
     internal class BotUI
     {
         #region Constants representing buttons. Константы, представляющие кнопки
 
-        private const string BUTTON_START = "Запустить бота"; // Start the bot.
+        private const string BUTTON_ORDERS_MENU = "Перейти в меню заказов"; // Orders menu button.
+
+        private const string BUTTON_CALL_SPEC = "Вызов специалиста"; // Calling a specialist
 
         private const string BUTTON_1 = "Заправка принтера";  // Refill printer.
 
@@ -28,6 +30,8 @@ namespace TelegramBot
         private string _token;
 
         Telegram.Bot.TelegramBotClient _client;
+
+        private Dictionary<long, UserState> _clientState = new Dictionary<long, UserState>(); // List of user states. Список меню, в котором находится пользователь. 
 
         public BotUI(string token)
         {
@@ -121,8 +125,9 @@ namespace TelegramBot
                             }
                             break;
 
-                        case BUTTON_START:
-                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Бот запущен. Пожалуйста, выберите команду: ", replyMarkup: GetButtons());
+                        case BUTTON_ORDERS_MENU:
+                            _clientState[update.Message.Chat.Id] = new UserState { State = State.MainMenu };
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Пожалуйста, выберите услугу: ", replyMarkup: GetButtons());
                             break;
 
                         default:
@@ -177,14 +182,26 @@ namespace TelegramBot
         #endregion
 
         #region Keyboard with a selection of ready-made buttons. Клавиатура с выбором готовых кнопок. 
+        private IReplyMarkup MainMenuButtons()
+        {
+            return new ReplyKeyboardMarkup
+            {
+                Keyboard = new List<List<KeyboardButton>>
+                {
+                    new List<KeyboardButton>{ new KeyboardButton { Text = BUTTON_ORDERS_MENU }, },
+                    new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_CALL_SPEC }, }
+                },
 
+                // Resize the keyboard. Изменение размера клавиатуры. 
+                ResizeKeyboard = true
+            };
+        }
         private IReplyMarkup GetButtons()
         {
             return new ReplyKeyboardMarkup
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
-                    new List<KeyboardButton>{ new KeyboardButton { Text = BUTTON_START }, },
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_1 }, new KeyboardButton {Text = BUTTON_2 }, },
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_3 }, new KeyboardButton {Text = BUTTON_4 }, },
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_BACK }, },

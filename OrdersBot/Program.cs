@@ -1,7 +1,6 @@
-﻿
-using System;
+﻿using System;
 
-namespace TelegramBot
+namespace OrdersBot
 {
     class Program
     {
