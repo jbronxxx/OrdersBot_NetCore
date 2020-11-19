@@ -11,15 +11,17 @@ namespace TelegramBot
     {
         #region Constants representing buttons. Константы, представляющие кнопки
 
-        private const string BUTTON_1 = "Заправка принтера";
+        private const string BUTTON_START = "Запустить бота"; // Start the bot.
 
-        private const string BUTTON_2 = "Установка Windows";
+        private const string BUTTON_1 = "Заправка принтера";  // Refill printer.
 
-        private const string BUTTON_3 = "Монтаж локальной сети";
+        private const string BUTTON_2 = "Установка Windows";  // Install Windows operating system.
 
-        private const string BUTTON_4 = "Ремонт компьютерной техники";
+        private const string BUTTON_3 = "Монтаж локальной сети";  // Local network installation.
 
-        private const string BUTTON_BACK = "Вернуться в предыдущее меню";
+        private const string BUTTON_4 = "Ремонт компьютерной техники";  // Repair of computer equipment.
+
+        private const string BUTTON_BACK = "Вернуться в предыдущее меню";  // Return to previous menu. 
 
         #endregion
 
@@ -119,7 +121,7 @@ namespace TelegramBot
                             }
                             break;
 
-                        case "/start":
+                        case BUTTON_START:
                             _client.SendTextMessageAsync(update.Message.Chat.Id, "Бот запущен. Пожалуйста, выберите команду: ", replyMarkup: GetButtons());
                             break;
 
@@ -182,9 +184,10 @@ namespace TelegramBot
             {
                 Keyboard = new List<List<KeyboardButton>>
                 {
+                    new List<KeyboardButton>{ new KeyboardButton { Text = BUTTON_START }, },
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_1 }, new KeyboardButton {Text = BUTTON_2 }, },
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_3 }, new KeyboardButton {Text = BUTTON_4 }, },
-                    new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_BACK },  },
+                    new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_BACK }, },
                 },
 
                 // Resize the keyboard. Изменение размера клавиатуры. 
