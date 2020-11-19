@@ -9,7 +9,7 @@ namespace TelegramBot
 {
     internal class BotUI
     {
-        #region Константы, представляющие кнопки
+        #region Constants representing buttons. Константы, представляющие кнопки
 
         private const string BUTTON_1 = "Заправка принтера";
 
@@ -32,7 +32,7 @@ namespace TelegramBot
             this._token = token;
         }
 
-        #region Метод, опрашивающий сервер Телеграм на наличие обновлений с интервалом Thread.Sleep(1000)
+        #region  Method that polls the Telegram server for updates with an interval Thread.Sleep (1000). Метод, опрашивающий сервер Телеграм на наличие обновлений с интервалом Thread.Sleep(1000).
 
         internal void GetUpdates()
         {
@@ -71,7 +71,7 @@ namespace TelegramBot
 
         #endregion
 
-        #region Метод обработки обновлений
+        #region Update processing method. Метод обработки обновлений. 
 
         private void processUpdate(Telegram.Bot.Types.Update update)
         {
@@ -83,7 +83,7 @@ namespace TelegramBot
 
                     string imagePath = null;
 
-                    #region  Варианты обработки обновлений в случае нажатия кнопки
+                    #region  Options for handling updates when a button is clicked. Варианты обработки обновлений в случае нажатия кнопки. 
 
                     switch (text)
                     {
@@ -131,7 +131,7 @@ namespace TelegramBot
 
                 #endregion
 
-                #region Отправка ответа пользователю в случае обработки какой-либо кнопки.
+                #region Sending a response to the user if any button is processed. Отправка ответа пользователю в случае обработки какой-либо кнопки. 
 
                 case Telegram.Bot.Types.Enums.UpdateType.CallbackQuery:
 
@@ -165,7 +165,7 @@ namespace TelegramBot
 
         #endregion
 
-        #region Кнопка, встроенная в поле переписки.
+        #region Button embedded in the chat field. Кнопка, встроенная в поле переписки. 
 
         private IReplyMarkup GetInlineButton(int id)
         {
@@ -174,7 +174,7 @@ namespace TelegramBot
 
         #endregion
 
-        #region Клавиатура с выбором готовых кнопок.
+        #region Keyboard with a selection of ready-made buttons. Клавиатура с выбором готовых кнопок. 
 
         private IReplyMarkup GetButtons()
         {
@@ -187,7 +187,7 @@ namespace TelegramBot
                     new List<KeyboardButton>{new KeyboardButton {Text = BUTTON_BACK },  },
                 },
 
-                // Изменение размера клавиатуры.
+                // Resize the keyboard. Изменение размера клавиатуры. 
                 ResizeKeyboard = true
             };
         }
