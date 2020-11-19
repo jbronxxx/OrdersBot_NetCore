@@ -11,6 +11,9 @@ namespace OrdersBot
     {
         #region Constants representing buttons. Константы, представляющие кнопки
 
+
+        private const string BUTTON_START = "/start"; // Start button.
+
         private const string BUTTON_ORDERS_MENU = "Перейти в меню заказов"; // Orders menu button.
 
         private const string BUTTON_CALL_SPEC = "Вызов специалиста"; // Calling a specialist
@@ -91,8 +94,24 @@ namespace OrdersBot
 
                     #region  Options for handling updates when a button is clicked. Варианты обработки обновлений в случае нажатия кнопки. 
 
+
                     switch (text)
                     {
+                        case BUTTON_START:
+                            _clientState[update.Message.Chat.Id] = new UserState { State = State.MainMenu };
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Пожалуйста, сделайте выбор:", replyMarkup: MainMenuButtons());
+                            break;
+
+                        case BUTTON_ORDERS_MENU:
+                            _clientState[update.Message.Chat.Id] = new UserState { State = State.MainMenu };
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Пожалуйста, выберите услугу: ", replyMarkup: GetOrdersButtons());
+                            break;
+
+                        case BUTTON_CALL_SPEC:
+                            _clientState[update.Message.Chat.Id] = new UserState { State = State.MainMenu };
+                            // TODO: call spec method.
+                            break;
+
                         case BUTTON_1:
                             imagePath = Path.Combine(Environment.CurrentDirectory, "1.png");
                             using (var stream = File.OpenRead(imagePath))
@@ -125,13 +144,13 @@ namespace OrdersBot
                             }
                             break;
 
-                        case BUTTON_ORDERS_MENU:
+                        case BUTTON_BACK: 
                             _clientState[update.Message.Chat.Id] = new UserState { State = State.MainMenu };
-                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Пожалуйста, выберите услугу: ", replyMarkup: GetButtons());
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Пожалуйста, сделайте выбор:", replyMarkup: MainMenuButtons());
                             break;
 
                         default:
-                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Нет подходящих вариантов для: " + text, replyMarkup: GetButtons());
+                            _client.SendTextMessageAsync(update.Message.Chat.Id, "Нет подходящих вариантов для: " + text, replyMarkup: MainMenuButtons());
                             break;
                     }
                     break;
@@ -145,19 +164,19 @@ namespace OrdersBot
                     switch (update.CallbackQuery.Data)
                     {
                         case "1":
-                            var msg1 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на заправку принтера принят.", replyMarkup: GetButtons()).Result;
+                            var msg1 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на заправку принтера принят.", replyMarkup: GetOrdersButtons()).Result;
                             break;
 
                         case "2":
-                            var msg2 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на установку Windows принят.", replyMarkup: GetButtons()).Result;
+                            var msg2 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на установку Windows принят.", replyMarkup: GetOrdersButtons()).Result;
                             break;
 
                         case "3":
-                            var msg3 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на монтаж локальной сети принят.", replyMarkup: GetButtons()).Result;
+                            var msg3 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на монтаж локальной сети принят.", replyMarkup: GetOrdersButtons()).Result;
                             break;
 
                         case "4":
-                            var msg4 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на ремонт принтера принят.", replyMarkup: GetButtons()).Result;
+                            var msg4 = _client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, $"Заказ на ремонт принтера принят.", replyMarkup: GetOrdersButtons()).Result;
                             break;
                     }
                     break;
@@ -182,6 +201,7 @@ namespace OrdersBot
         #endregion
 
         #region Keyboard with a selection of ready-made buttons. Клавиатура с выбором готовых кнопок. 
+
         private IReplyMarkup MainMenuButtons()
         {
             return new ReplyKeyboardMarkup
@@ -196,7 +216,7 @@ namespace OrdersBot
                 ResizeKeyboard = true
             };
         }
-        private IReplyMarkup GetButtons()
+        private IReplyMarkup GetOrdersButtons()
         {
             return new ReplyKeyboardMarkup
             {
